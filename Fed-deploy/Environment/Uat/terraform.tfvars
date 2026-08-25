@@ -8,7 +8,7 @@ stg_projects = {
 }
 project_services = {
   "service1" = {
-    project            = "github-project"
+    project            = "github-project-id"
     service            = "compute.googleapis.com"
     disable_on_destroy = false
   }

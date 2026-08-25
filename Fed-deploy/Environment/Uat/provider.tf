@@ -7,7 +7,7 @@ terraform {
 }
 backend "gcs" {
     bucket = "stg-bucket-1"
-    prefix = "uat"
+    prefix = "github-project"
   }
 }
 provider "google" {
