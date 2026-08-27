@@ -13,7 +13,7 @@ jobs:
   gcp-auth-test:
     runs-on: 
       - self-hosted
-      - Windows
+      - gcp-resource-deployer
 
     steps:
       - name: Checkout repository
@@ -34,4 +34,3 @@ jobs:
           gcloud auth list
           gcloud config get-value project
 
-          
