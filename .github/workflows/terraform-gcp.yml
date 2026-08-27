@@ -11,10 +11,8 @@ permissions:
 
 jobs:
   gcp-auth-test:
-    runs-on: 
-      - self-hosted
-      - gcp-resource-deployer
-
+    runs-on: self-hosted
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
