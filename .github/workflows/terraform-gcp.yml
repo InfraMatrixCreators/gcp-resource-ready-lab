@@ -1,0 +1,35 @@
+name: GCP WIF Authentication Test
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  gcp-auth-test:
+    runs-on: 
+      - self-hosted
+      - gcp-resource-deployer
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/346137993404/locations/global/workloadIdentityPools/github-actions-pool-01/providers/github-actions-provider'
+          service_account: 'github-actions-sa@jitu-dev-project-2026.iam.gserviceaccount.com'
+
+      - name: Setup Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Verify GCP Authentication
+        shell: powershell
+        run: |
+          gcloud auth list
+          gcloud config get-value project
