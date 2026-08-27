@@ -13,7 +13,7 @@ jobs:
   gcp-auth-test:
     runs-on: 
       - self-hosted
-      - gcp-resource-deployer
+      - Windows
 
     steps:
       - name: Checkout repository
