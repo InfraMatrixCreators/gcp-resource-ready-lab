@@ -53,3 +53,5 @@ jobs:
       - name: Terraform Plan
         working-directory: ./Fed-deploy/Environment/Uat
         run: terraform plan -input=false -no-color
+
+        
