@@ -14,6 +14,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -31,8 +32,19 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: '1.13.5'
+          terraform_version: latest
           terraform_wrapper: false
+
+      - name: Verify GCP Authentication
+        run: |
+          Write-Host "===== Active GCP Account ====="
+          gcloud auth list
+
+          Write-Host "===== GCP Project ====="
+          gcloud config get-value project
+
+          Write-Host "===== Access Token Test ====="
+          gcloud auth print-access-token
 
       - name: Check Terraform
         run: |
@@ -53,7 +65,3 @@ jobs:
       - name: Terraform Plan
         working-directory: ./Fed-deploy/Environment/Uat
         run: terraform plan -input=false -no-color
-
-
-
-        
