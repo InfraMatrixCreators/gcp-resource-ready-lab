@@ -1,3 +1,4 @@
+
 name: GCP Terraform CI
 
 on:
@@ -12,6 +13,7 @@ permissions:
 jobs:
   gcp-auth-test:
     runs-on: self-hosted
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,7 +26,7 @@ jobs:
           project_id: "jitu-dev-project-2026"
 
       - name: Setup Google Cloud CLI
-        uses: google-github-actions/setup-gcloud@
+        uses: google-github-actions/setup-gcloud@v3
         with:
           skip_install: true
 
@@ -33,7 +35,10 @@ jobs:
         run: |
           Write-Host "===== Active GCP Account ====="
           gcloud auth list
+
           Write-Host "===== Current GCP Project ====="
           gcloud config get-value project
+
           Write-Host "===== GCP Project Test ====="
           gcloud projects describe jitu-dev-project-2026 --format="value(projectId)"
+
