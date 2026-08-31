@@ -28,8 +28,10 @@ jobs:
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
       - name: Terraform Init
+        working-directory: ./Fed-deploy/Environment/Uat
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ./Fed-deploy/Environment/Uat
         run: terraform plan
         
