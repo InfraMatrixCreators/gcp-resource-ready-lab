@@ -11,48 +11,58 @@ permissions:
   id-token: write
 
 jobs:
-  gcp-auth-test:
+  terraform:
     runs-on: self-hosted
 
     steps:
-     - name: Checkout
-       uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-     - name: Show GitHub OIDC Context
-       shell: powershell
-       run: |
-        Write-Host "===== Repository ====="
-        Write-Host $env:GITHUB_REPOSITORY
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/346137993404/locations/global/workloadIdentityPools/github-actions-pool-01/providers/github-actions-provider"
+          service_account: "github-actions-sa@jitu-dev-project-2026.iam.gserviceaccount.com"
+          project_id: "jitu-dev-project-2026"
 
-        Write-Host "===== Repository Owner ====="
-        Write-Host $env:GITHUB_REPOSITORY_OWNER
+      - name: Setup Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v3
+        with:
+          skip_install: true
 
-        Write-Host "===== Ref ====="
-        Write-Host $env:GITHUB_REF
+      - name: Verify GCP Authentication
+        run: |
+          Write-Host "===== Active GCP Account ====="
+          gcloud auth list
 
-        Write-Host "===== Actor ====="
-        Write-Host $env:GITHUB_ACTOR
+          Write-Host "===== Current GCP Project ====="
+          gcloud config get-value project
 
-     - name: Authenticate to Google Cloud
-       uses: google-github-actions/auth@v2
-       with:
-         workload_identity_provider: "projects/346137993404/locations/global/workloadIdentityPools/github-actions-pool-01/providers/github-actions-provider"
-         service_account: "github-actions-sa@jitu-dev-project-2026.iam.gserviceaccount.com"
-         project_id: "jitu-dev-project-2026"
+          Write-Host "===== GCP Project Test ====="
+          gcloud projects describe jitu-dev-project-2026 --format="value(projectId)"
 
-     - name: Setup Google Cloud CLI
-       uses: google-github-actions/setup-gcloud@v3
-       with:
-         skip_install: true
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
 
-     - name: Verify GCP Authentication
-       shell: powershell
-       run: |
-         Write-Host "===== Active GCP Account ====="
-         gcloud auth list
+      - name: Check Terraform
+        run: |
+          Write-Host "===== Terraform Location ====="
+          where.exe terraform
 
-         Write-Host "===== Current GCP Project ====="
-         gcloud config get-value project
+          Write-Host "===== Terraform Version ====="
+          terraform version
 
-         Write-Host "===== GCP Project Test ====="
-         gcloud projects describe jitu-dev-project-2026 --format="value(projectId)"
+      - name: Terraform Init
+        working-directory: ./Fed-deploy/Environment/Uat
+        run: terraform init -input=false -no-color
+
+      - name: Terraform Validate
+        working-directory: ./Fed-deploy/Environment/Uat
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        working-directory: ./Fed-deploy/Environment/Uat
+        run: terraform plan -input=false -no-color
+
