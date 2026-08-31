@@ -1,3 +1,4 @@
+```yaml
 name: GCP Terraform CI
 
 on:
@@ -23,21 +24,20 @@ jobs:
         with:
           workload_identity_provider: 'projects/346137993404/locations/global/workloadIdentityPools/github-actions-pool-01/providers/github-actions-provider'
           service_account: 'github-actions-sa@jitu-dev-project-2026.iam.gserviceaccount.com'
+          project_id: 'jitu-dev-project-2026'
 
       - name: Setup Google Cloud CLI
         uses: google-github-actions/setup-gcloud@v3
-        with:
-          skip_install: true
 
       - name: Verify GCP Authentication
+        shell: powershell
         run: |
           Write-Host "===== Active GCP Account ====="
           gcloud auth list
 
-          Write-Host "===== Access Token Test ====="
-          gcloud auth print-access-token
+          Write-Host "===== Current GCP Project ====="
+          gcloud config get-value project
 
-          Write-Host "===== Service Account Test ====="
+          Write-Host "===== GCP Project Test ====="
           gcloud projects describe jitu-dev-project-2026 --format="value(projectId)"
 
-          
