@@ -15,16 +15,15 @@ jobs:
     runs-on: self-hosted
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: 'projects/346137993404/locations/global/workloadIdentityPools/github-actions-pool-01/providers/github-actions-provider'
-          service_account: 'github-actions-sa@jitu-dev-project-2026.iam.gserviceaccount.com'
-          project_id: 'jitu-dev-project-2026'
+          workload_identity_provider: projects/346137993404/locations/global/workloadIdentityPools/github-actions-pool-01/providers/github-actions-provider
+          service_account: github-actions-sa@jitu-dev-project-2026.iam.gserviceaccount.com
+          project_id: jitu-dev-project-2026
 
       - name: Setup Google Cloud CLI
         uses: google-github-actions/setup-gcloud@v3
@@ -40,4 +39,4 @@ jobs:
 
           Write-Host "===== GCP Project Test ====="
           gcloud projects describe jitu-dev-project-2026 --format="value(projectId)"
-
+```
