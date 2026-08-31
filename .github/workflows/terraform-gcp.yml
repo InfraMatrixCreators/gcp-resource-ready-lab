@@ -1,4 +1,4 @@
-name: GCP WIF Authentication Test
+name: GCP Terraform CI
 
 on:
   push:
@@ -12,31 +12,24 @@ permissions:
 jobs:
   gcp-auth-test:
     runs-on: self-hosted
-      
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - name: Checkout
+        uses: actions/checkout@v2.8.0
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: 'projects/346137993404/locations/global/workloadIdentityPools/github-actions-pool-01/providers/github-actions-provider'
           service_account: 'github-actions-sa@jitu-dev-project-2026.iam.gserviceaccount.com'
-
       - name: Setup Google Cloud CLI
         uses: google-github-actions/setup-gcloud@v3
         with:
           skip_install: true
 
-      - name: Verify GCP Authentication
-        shell: powershell
-        run: |
-          gcloud auth list
-          gcloud config get-value project
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.3
+      - name: Terraform Init
+        run: terraform init
 
-          
-
-
-
-
-
+      - name: Terraform Plan
+        run: terraform plan
+        
