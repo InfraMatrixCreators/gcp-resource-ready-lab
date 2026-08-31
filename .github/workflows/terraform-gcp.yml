@@ -29,41 +29,13 @@ jobs:
         with:
           skip_install: true
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: latest
-          terraform_wrapper: false
-
       - name: Verify GCP Authentication
         run: |
           Write-Host "===== Active GCP Account ====="
           gcloud auth list
 
-          Write-Host "===== GCP Project ====="
-          gcloud config get-value project
-
           Write-Host "===== Access Token Test ====="
           gcloud auth print-access-token
 
-      - name: Check Terraform
-        run: |
-          Write-Host "===== Terraform Location ====="
-          where.exe terraform
-
-          Write-Host "===== Terraform Version ====="
-          terraform version
-
-      - name: Terraform Init
-        working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform init -input=false -no-color
-
-      - name: Terraform Validate
-        working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform validate -no-color
-
-      - name: Terraform Plan
-        working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform plan -input=false -no-color
-
-        
+          Write-Host "===== Service Account Test ====="
+          gcloud projects describe jitu-dev-project-2026 --format="value(projectId)"
