@@ -39,3 +39,5 @@ jobs:
 
           Write-Host "===== Service Account Test ====="
           gcloud projects describe jitu-dev-project-2026 --format="value(projectId)"
+
+          
