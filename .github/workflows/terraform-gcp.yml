@@ -32,15 +32,15 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: '1.13.5'
+          terraform_wrapper: false
 
       - name: Check Terraform
         run: |
           Write-Host "===== Terraform Location ====="
           where.exe terraform
+
           Write-Host "===== Terraform Version ====="
           terraform version
-          Write-Host "===== Terraform Command ====="
-          Get-Command terraform | Format-List *
 
       - name: Terraform Init
         working-directory: ./Fed-deploy/Environment/Uat
