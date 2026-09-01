@@ -1,4 +1,3 @@
-
 name: GCP Terraform Destroy
 
 on:
@@ -11,14 +10,17 @@ permissions:
   id-token: write
 
 jobs:
-  terraform:
+  terraform-destroy:
     runs-on: self-hosted
 
     steps:
 
+      # 1. Checkout Repository
       - name: Checkout
         uses: actions/checkout@v4
 
+
+      # 2. Authenticate to Google Cloud using WIF
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -26,12 +28,17 @@ jobs:
           service_account: "github-actions-sa@jitu-dev-project-2026.iam.gserviceaccount.com"
           project_id: "jitu-dev-project-2026"
 
+
+      # 3. Setup Google Cloud CLI
       - name: Setup Google Cloud CLI
         uses: google-github-actions/setup-gcloud@v3
         with:
           skip_install: true
 
+
+      # 4. Verify GCP Authentication
       - name: Verify GCP Authentication
+        shell: powershell
         run: |
           Write-Host "===== Active GCP Account ====="
           gcloud auth list
@@ -42,12 +49,17 @@ jobs:
           Write-Host "===== GCP Project Test ====="
           gcloud projects describe jitu-dev-project-2026 --format="value(projectId)"
 
+
+      # 5. Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
 
+
+      # 6. Check Terraform
       - name: Check Terraform
+        shell: powershell
         run: |
           Write-Host "===== Terraform Location ====="
           where.exe terraform
@@ -55,24 +67,30 @@ jobs:
           Write-Host "===== Terraform Version ====="
           terraform version
 
+
+      # 7. Terraform Init
       - name: Terraform Init
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform init
+        shell: powershell
+        run: terraform init -input=false -no-color
 
-      - name: Check Terraform State
-        working-directory: ./Fed-deploy/Environment/Uat
-        run: |
-          Write-Host "===== Terraform State List ====="
-          terraform state list
 
-          Write-Host "===== Project State ====="
-          terraform state show 'module.project.google_project.stg_project["stg1"]'
-
+      # 8. Terraform Validate
       - name: Terraform Validate
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform validate
+        shell: powershell
+        run: terraform validate -no-color
 
+
+      # 9. Terraform Destroy Plan
+      - name: Terraform Destroy Plan
+        working-directory: ./Fed-deploy/Environment/Uat
+        shell: powershell
+        run: terraform plan -destroy -input=false -no-color
+
+
+      # 10. Terraform Destroy
       - name: Terraform Destroy
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform destroy -auto-approve
-
+        shell: powershell
+        run: terraform destroy -auto-approve -input=false -no-color
