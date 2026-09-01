@@ -4,4 +4,6 @@ resource "google_project" "stg_project" {
     project_id = each.value.project_id
     org_id = each.value.organization_id
     billing_account = each.value.billing_account
+    deletion_policy = "DELETE"
+
 }
