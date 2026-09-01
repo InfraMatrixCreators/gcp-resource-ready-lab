@@ -66,8 +66,8 @@ jobs:
         working-directory: ./Fed-deploy/Environment/Uat
         run: terraform plan 
 
-      - name: Terraform Apply
+      - name: Terraform Destroy
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform apply -auto-approve
+        run: terraform destroy -auto-approve
         
         
