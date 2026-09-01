@@ -68,4 +68,6 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform apply -auto-approve 
+        run: terraform apply -auto-approve
+        
+        
