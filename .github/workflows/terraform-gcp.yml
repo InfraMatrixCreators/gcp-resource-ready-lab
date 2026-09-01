@@ -56,13 +56,16 @@ jobs:
 
       - name: Terraform Init
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform init -input=false -no-color
+        run: terraform init 
 
       - name: Terraform Validate
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform validate -no-color
+        run: terraform validate 
 
       - name: Terraform Plan
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform plan -input=false -no-color
+        run: terraform plan 
 
+      - name: Terraform Apply
+        working-directory: ./Fed-deploy/Environment/Uat
+        run: terraform apply -auto-approve 
