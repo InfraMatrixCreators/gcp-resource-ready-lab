@@ -1,5 +1,5 @@
 
-name: GCP Terraform CI
+name: GCP Terraform Destroy
 
 on:
   push:
@@ -15,6 +15,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -56,18 +57,22 @@ jobs:
 
       - name: Terraform Init
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform init 
+        run: terraform init
+
+      - name: Check Terraform State
+        working-directory: ./Fed-deploy/Environment/Uat
+        run: |
+          Write-Host "===== Terraform State List ====="
+          terraform state list
+
+          Write-Host "===== Project State ====="
+          terraform state show 'module.project.google_project.stg_project["stg1"]'
 
       - name: Terraform Validate
         working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform validate 
-
-      - name: Terraform Plan
-        working-directory: ./Fed-deploy/Environment/Uat
-        run: terraform plan 
+        run: terraform validate
 
       - name: Terraform Destroy
         working-directory: ./Fed-deploy/Environment/Uat
         run: terraform destroy -auto-approve
-        
-        
+
